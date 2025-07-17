@@ -276,7 +276,6 @@ Based on the results, the three most common behaviors observed for Carmen Sandie
 
 ### D. Monthly behavior probability
 
-
 For each month, the probability that Carmen exhibits one of her three most common behaviors ranges from about 12% to 15%. The highest probability occurs in May (15.28%), while the lowest is in October (12.12%). With only minor variation throughout the year, this once again suggests that her behavioral patterns are relatively consistent across all months.
 
 | month_n | total_per_month | top_behavior_count | top_behavior_probability |
@@ -296,7 +295,6 @@ For each month, the probability that Carmen exhibits one of her three most commo
 
 ---
 
-
 # Machine Learning Methods & Insights
 
 - Python scripts (`ml_analysis.py`, etc.) connect to the transformed database and run ML analyses.
@@ -306,7 +304,7 @@ For each month, the probability that Carmen exhibits one of her three most commo
   - Feature importance analysis
   - Clustering and pattern detection via groupby statistics
 
-### Predicting Carmen's Next Region
+## Predicting Carmen's Next Region
 
 Region Prediction Accuracy: 0.996
 
@@ -325,77 +323,14 @@ Feature Importance for Region Prediction:
 | has_weapon        | 0.000725   |
 | has_jacket        | 0.000723   |
 
+## Predicting Carmen's Behavior
 
-### Predicting Carmen's Behavior
 Behavior Prediction Accuracy: 0.041
 
 ![Behavior Prediction Confusion Matrix](docs/behavior_pred_confusion_matrix.png)
 
 
-### Pattern Detection
-
-| Season | Region    | Has Weapon | Has Hat | Has Jacket | Latitude | Longitude |
-| ------ | --------- | ---------- | ------- | ---------- | -------- | --------- |
-| Fall   | africa    | 0.110      | 0.649   | 0.922      | 9.291    | 15.175    |
-|        | america   | 0.106      | 0.590   | 0.927      | 22.035   | -82.071   |
-|        | asia      | 0.108      | 0.643   | 0.924      | 26.418   | 97.224    |
-|        | atlantic  | 0.125      | 0.750   | 0.875      | 32.753   | -20.626   |
-|        | australia | 0.171      | 0.537   | 0.976      | -33.221  | 145.415   |
-|        | europe    | 0.117      | 0.613   | 0.907      | 48.856   | 13.598    |
-|        | indian    | 0.053      | 0.789   | 0.947      | -20.175  | 46.916    |
-|        | pacific   | 0.143      | 0.619   | 0.952      | -19.298  | 78.664    |
-| Spring | africa    | 0.112      | 0.650   | 0.918      | 8.009    | 17.162    |
-|        | america   | 0.099      | 0.621   | 0.919      | 21.645   | -81.702   |
-|        | asia      | 0.124      | 0.634   | 0.938      | 25.550   | 95.808    |
-|        | atlantic  | 0.091      | 0.636   | 0.818      | 35.931   | -23.834   |
-|        | australia | 0.116      | 0.605   | 0.907      | -33.307  | 143.280   |
-|        | europe    | 0.102      | 0.633   | 0.927      | 48.576   | 12.883    |
-|        | indian    | 0.045      | 0.545   | 0.955      | -20.563  | 48.127    |
-|        | pacific   | 0.278      | 0.556   | 0.889      | -12.638  | 76.561    |
-| Summer | africa    | 0.136      | 0.588   | 0.920      | 10.645   | 15.853    |
-|        | america   | 0.124      | 0.641   | 0.908      | 22.580   | -81.925   |
-|        | asia      | 0.112      | 0.629   | 0.925      | 26.297   | 95.880    |
-|        | atlantic  | 0.000      | 0.600   | 1.000      | 29.758   | -17.602   |
-|        | australia | 0.229      | 0.714   | 0.914      | -32.979  | 144.465   |
-|        | europe    | 0.117      | 0.632   | 0.918      | 48.513   | 13.388    |
-|        | indian    | 0.083      | 0.833   | 1.000      | -20.785  | 46.499    |
-|        | pacific   | 0.083      | 0.583   | 1.000      | -18.487  | 135.325   |
-| Winter | africa    | 0.128      | 0.619   | 0.934      | 7.674    | 15.725    |
-|        | america   | 0.116      | 0.640   | 0.940      | 22.232   | -81.219   |
-|        | asia      | 0.113      | 0.619   | 0.935      | 26.116   | 94.727    |
-|        | atlantic  | 0.250      | 1.000   | 0.750      | 32.753   | -20.626   |
-|        | australia | 0.043      | 0.609   | 0.935      | -32.914  | 145.859   |
-|        | europe    | 0.120      | 0.637   | 0.928      | 48.609   | 12.876    |
-|        | indian    | 0.130      | 0.522   | 0.957      | -20.665  | 49.636    |
-|        | pacific   | 0.000      | 0.800   | 1.000      | -7.052   | 56.722    |
-
-
-| Behavior           | Has Weapon | Has Hat | Has Jacket | # of Reports |
-| ------------------ | ---------- | ------- | ---------- | ------------ |
-| out-of-control     | 0.111      | 0.597   | 0.920      | 637          |
-| complaining        | 0.108      | 0.634   | 0.936      | 636          |
-| happy              | 0.088      | 0.638   | 0.893      | 635          |
-| tense              | 0.119      | 0.627   | 0.923      | 614          |
-| insulting          | 0.113      | 0.639   | 0.918      | 613          |
-| panicking          | 0.110      | 0.640   | 0.942      | 608          |
-| confessing         | 0.114      | 0.616   | 0.931      | 597          |
-| unhappy            | 0.106      | 0.636   | 0.926      | 596          |
-| fleeing            | 0.131      | 0.638   | 0.921      | 596          |
-| over-complimenting | 0.121      | 0.599   | 0.928      | 596          |
-
-Here's your markdown-ready version of the analysis, properly formatted for a GitHub README:
-
----
-
-## 🔍 ANALYSIS 2: Predicting Carmen's Behavior
-
-**Behavior Prediction Accuracy:** `0.041`
-
-![Behavior Prediction Confusion Matrix](docs/behavior_pred_confusion_matrix.png)
-
----
-
-## 📊 ANALYSIS 3: Pattern Detection
+## Pattern Detection
 
 ### Seasonal Patterns by Region
 
@@ -449,14 +384,14 @@ Here's your markdown-ready version of the analysis, properly formatted for a Git
 | fleeing            | 0.131      | 0.638   | 0.921      | 596          |
 | over-complimenting | 0.121      | 0.599   | 0.928      | 596          |
 
-### Predictive Insights
+<!-- ### Predictive Insights
 
 Predicted next region for average conditions: africa
 
 High-risk profile (Armed + Jacket + No Hat) most common in:
 america    166
 europe     160
-asia       147
+asia       147 -->
 
 
 ---
