@@ -1,0 +1,35 @@
+# dbt_project.yml
+name: 'carmen_sightings'
+version: '1.0.0'
+config-version: 2
+
+profile: 'carmen_sightings'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
+asset-paths: ["assets"]
+
+
+target-path: "target"
+clean-targets:
+  - "target"
+  # - "dbt_packages"
+  - "logs"
+  - "compiled"
+  - "run"
+  # - "dbt_internal_packages"
+
+models:
+  carmen_sightings:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table
+      +schema: marts

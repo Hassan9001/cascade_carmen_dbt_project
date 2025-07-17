@@ -1,0 +1,23 @@
+# models/staging/_sources.yml
+version: 2
+
+sources:
+  - name: raw_data
+    description: "Raw Carmen Sandiego sighting data from 8 regional agencies"
+    tables:
+      - name: raw_europe
+        description: "European agency sightings"
+      - name: raw_asia
+        description: "Asian agency sightings"
+      - name: raw_africa
+        description: "African agency sightings"
+      - name: raw_america
+        description: "American agency sightings"
+      - name: raw_australia
+        description: "Australian agency sightings"
+      - name: raw_atlantic
+        description: "Atlantic agency sightings"
+      - name: raw_indian
+        description: "Indian agency sightings"
+      - name: raw_pacific
+        description: "Pacific agency sightings"

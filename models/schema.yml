@@ -1,0 +1,64 @@
+
+# models/schema.yml
+version: 2
+
+models:
+  - name: fact_sightings
+    description: "Fact table containing all sightings"
+    columns:
+      - name: sighting_id
+        description: "Unique identifier for each sighting"
+        tests:
+          - unique
+          - not_null
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude coordinates"
+        tests:
+          - not_null
+      - name: longitude
+        description: "Longitude coordinates"
+        tests:
+          - not_null
+      - name: has_weapon
+        description: "Boolean indicating if Carmen was armed"
+        tests:
+          - not_null
+      - name: has_hat
+        description: "Boolean indicating if Carmen was wearing a hat"
+        tests:
+          - not_null
+      - name: has_jacket
+        description: "Boolean indicating if Carmen was wearing a jacket"
+        tests:
+          - not_null
+
+  - name: dim_locations
+    description: "Dimension table for locations"
+    columns:
+      - name: location_id
+        description: "Unique identifier for location"
+        tests:
+          - unique
+          - not_null
+      - name: city
+        tests:
+          - not_null
+      - name: country
+        tests:
+          - not_null
+
+  - name: dim_agents
+    description: "Dimension table for agents"
+    columns:
+      - name: agent_id
+        description: "Unique identifier for agent"
+        tests:
+          - unique
+          - not_null
+      - name: agent
+        tests:
+          - not_null
