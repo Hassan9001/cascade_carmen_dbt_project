@@ -14,10 +14,65 @@
 ## Project Overview
 
 
-This dbt project transforms Carmen Sandiego sighting data from eight different regional sources into a unified analytical schema. The project follows an ELT (Extract, Load, Transform) pattern using dbt with PostgreSQL as the data warehouse. As a bonus, this project also features a machine learning step to showcase additional insights.
+This dbt project transforms Carmen Sandiego sighting data from eight different regional sources into a unified analytical schema. The project follows an ELT (Extract, Load, Transform) pattern using dbt with PostgreSQL as the databaase. As a bonus, this project also features a machine learning step to showcase its potential application.
 
 ---
 
+### Repository Files
+
+```
+cascade_carmen_dbt_project/
+├── README.md                  # Project documentation
+├── dbt_project.yml            # dbt project config
+├── extract.py                 # Extracts Excel to CSV seeds
+├── data/
+│   └── raw/                   # Original Excel data
+├── seeds/                     # Eight regional raw CSVs (input to dbt)
+├── models/
+│   ├── staging/               # Standardizes each region (stg_*.sql)
+│   ├── intermediate/          # Combines all regions (int_unified_sightings.sql)
+│   ├── marts/                 # Core tables: fact & dimension tables, plus analytics
+│   └── schema.yml             # Data tests (unique, not_null, etc.)
+├── macros/                    # Reusable SQL logic (e.g., standardize_columns)
+└── tests/                     # (Optional) Custom test SQL
+```
+
+
+### Installation & Setup Guide
+
+1. Clone this repository and install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+2. Run the extraction script to convert Excel data sheets into individual CSV files:
+    ```bash
+    python extract.py
+    ```
+3. Set up your PostgreSQL database and local credentials.
+4. Initialize the dbt project (if not already done) and configure your `~/.dbt/profiles.yml`.
+5. Ensure `dbt_project.yml` is properly configured.
+6. Run the following dbt commands to execute the pipeline:
+    ```bash
+    dbt debug      # Test connection with the database
+    dbt deps       # Install dbt packages if needed
+    dbt seed       # Load seed data into PostgreSQL as raw tables
+    dbt run        # Build all models
+    dbt test       # Run data quality tests
+    dbt compile    # Generate executable SQL from source, model, test, and analysis files
+    dbt docs generate && dbt docs serve  # Generate and view dbt docs at http://localhost:8080
+    ```
+7. For analytics, connect to your PostgreSQL database using the psql shell (or run `psql -U postgres -d your_database` from any terminal) to run SQL queries:
+    ```bash
+    # Example:
+    psql -U <username> -d <database_name>   # Connect to your database
+    \dn                                    # Check schemas
+    \dt carmen_marts.*                     # Check tables in marts schema
+    SELECT * FROM carmen_marts.fact_sightings LIMIT 5;  # Sample data
+    ```
+8. To run the bonus **machine learning** step for additional data insights:
+    ```bash
+    python ml_analysis.py
+    ```
 ### Structure
 
 ```mermaid
@@ -85,62 +140,55 @@ graph TD
     D3 --> E4
 ```
 
-### Repository Files
+### Initial Peak 
 
-```
-cascade_carmen_dbt_project/
-├── README.md                  # Project documentation
-├── dbt_project.yml            # dbt project config
-├── extract.py                 # Extracts Excel to CSV seeds
-├── data/
-│   └── raw/                   # Original Excel data
-├── seeds/                     # Eight regional raw CSVs (input to dbt)
-├── models/
-│   ├── staging/               # Standardizes each region (stg_*.sql)
-│   ├── intermediate/          # Combines all regions (int_unified_sightings.sql)
-│   ├── marts/                 # Core tables: fact & dimension tables, plus analytics
-│   └── schema.yml             # Data tests (unique, not_null, etc.)
-├── macros/                    # Reusable SQL logic (e.g., standardize_columns)
-└── tests/                     # (Optional) Custom test SQL
+Before we talk about the model in more debth. At the start of every data related assignmnet, my first step is simply to look at the data to get a sense of what I am dealing with. For example, here is a simmple python script I run at the start of every project. 
+```python
+import pandas as pd
+xml = pd.read_excel('./data/carmen_sightings_20220629061307.xlsx')
+for i in xls.sheet_names:
+    df = pd.read_excel(xls, sheet_name=i)
+    print(i, df.isnull().sum().tolist())
 ```
 
+```
+<!-- OUTPUT:: -->
+EUROPE [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ASIA [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+AFRICA [0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0]
+AMERICA [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+AUSTRALIA [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ATLANTIC [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+INDIAN [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+PACIFIC [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+```
 
-### Installation & Setup Guide
+in this case it revealed something interesting. Only a single column ('country') in Africa contained any NaN values. 
+To find out what the missing country is:
 
-1. Clone this repository and install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-2. Run the extraction script to convert Excel data sheets into individual CSV files:
-    ```bash
-    python extract.py
-    ```
-3. Set up your PostgreSQL database and local credentials.
-4. Initialize the dbt project (if not already done) and configure your `~/.dbt/profiles.yml`.
-5. Ensure `dbt_project.yml` is properly configured.
-6. Run the following dbt commands to execute the pipeline:
-    ```bash
-    dbt debug      # Test connection with the database
-    dbt deps       # Install dbt packages if needed
-    dbt seed       # Load seed data into PostgreSQL as raw tables
-    dbt run        # Build all models
-    dbt test       # Run data quality tests
-    dbt compile    # Generate executable SQL from source, model, test, and analysis files
-    dbt docs generate && dbt docs serve  # Generate and view dbt docs at http://localhost:8080
-    ```
-7. For analytics, connect to your PostgreSQL database using the psql shell (or run `psql -U postgres -d your_database` from any terminal) to run SQL queries:
-    ```bash
-    # Example:
-    psql -U <username> -d <database_name>   # Connect to your database
-    \dn                                    # Check schemas
-    \dt carmen_marts.*                     # Check tables in marts schema
-    SELECT * FROM carmen_marts.fact_sightings LIMIT 5;  # Sample data
-    ```
-8. To run the bonus **machine learning** step for additional data insights:
-    ```bash
-    python ml_analysis.py
-    ```
+```python
+df.loc[df['country'].isnull(), 'city']
+```
 
+```
+<!-- OUTPUT:: -->
+28     Okahandja
+99     Okahandja
+479    Okahandja
+559    Okahandja
+618    Okahandja
+636    Okahandja
+812    Okahandja
+836    Okahandja
+842    Okahandja
+845    Okahandja
+952    Okahandja
+Name: city, dtype: object
+```
+
+Okahandja is in Namibia, therefore, we can fill the missing values with 'nambia'. The acronym for nambia is 'NA', which explains why it was being read as a null value.
+
+After several more inquiries, such as this I am able to get a sense of how best to build the pipline and what processing steps to include.In this case, aside from Null values, column nameing discrepincies, and some language difference, the data seems to be reletivly clean. Therefore, our model does not need to be too complex so long as we cover tbe basics. 
 
 ### Pipeline Flow, Decisions, & Schema Design
 
@@ -156,8 +204,8 @@ cascade_carmen_dbt_project/
     - Column type assertions for dates and coordinates
     - Null checks for critical fields
 
-### Entity Relationship Diagram
 
+### Relationship Diagram
 
 <!-- ![Entity Relationship Diagram](docs/entity_relationship_diagram.png) -->
 
@@ -244,7 +292,6 @@ The table below shows sightings by month (with 1 meaning January). It also shows
 
 ### B. Appearance probability
 
-
 The probability of Carmen being armed and wearing a jacket but not a hat is highest in June (4.74%) and lowest in November (2.43%). This appearance is rare overall, never exceeding 5% in any month. She is almost always seen with a jacket, and often with a hat, but being armed is less common.
 
 | month_n | total_per_month | conditional_per_month | probability | armed_count | hat_count | jacket_count | armed_probability | hat_probability | jacket_probability |
@@ -263,7 +310,6 @@ The probability of Carmen being armed and wearing a jacket but not a hat is high
 | 12      | 1147            | 52                   | 0.0453      | 141         | 717       | 1078         | 0.1229            | 0.6251          | 0.9398             |
 
 ### C. Behavior analysis
-
 
 Based on the results, the three most common behaviors observed for Carmen Sandiego are out-of-control, complaining, and happy. However, the lack of variability across all behaviors suggests that Carmen exhibits a diverse range of behaviors.
 
@@ -296,6 +342,8 @@ For each month, the probability that Carmen exhibits one of her three most commo
 ---
 
 # Machine Learning Methods & Insights
+
+---
 
 - Python scripts (`ml_analysis.py`, etc.) connect to the transformed database and run ML analyses.
 - **Methods Used:**
