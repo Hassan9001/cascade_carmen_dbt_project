@@ -186,9 +186,21 @@ df.loc[df['country'].isnull(), 'city']
 Name: city, dtype: object
 ```
 
-Okahandja is in Namibia, therefore, we can fill the missing values with 'nambia'. The acronym for nambia is 'NA', which explains why it was being read as a null value.
+Okahandja is in Namibia, therefore we know the missing values. The acronym for Namibia is 'NA', which explains why it was being read as a null value. We can fill missing values with "Namibia".
 
-After several more inquiries, such as this I am able to get a sense of how best to build the pipline and what processing steps to include.In this case, aside from Null values, column nameing discrepincies, and some language difference, the data seems to be reletivly clean. Therefore, our model does not need to be too complex so long as we cover tbe basics. 
+```python
+import pandas as pd
+xls = pd.ExcelFile('./data/carmen_sightings_20220629061307.xlsx')
+df = pd.read_excel(xls, sheet_name='AFRICA')
+
+# Fill NaN values in 'country' column with "Namibia"
+df['country'] = df['country'].fillna("Namibia")
+
+# Save seed file
+df.to_csv(f'./seeds/raw_africa.csv', index=False)
+```
+
+After several more inquiries similar to this, I am able to get a sense of how best to build the pipline and what processing steps to include. In this case, aside from Null values, column nameing discrepincies, and some language difference, the data seems to be reletivly clean. Therefore, our model does not need to be too complex so long as we cover tbe basics. 
 
 ### Pipeline Flow, Decisions, & Schema Design
 
@@ -341,7 +353,7 @@ For each month, the probability that Carmen exhibits one of her three most commo
 
 ---
 
-# Machine Learning Methods & Insights
+# Machine Learning (Demo)
 
 ---
 
